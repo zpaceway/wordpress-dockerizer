@@ -1,0 +1,47 @@
+version: "3.5"
+
+networks:
+  wordpress_network:
+    name: wordpress_network
+    driver: bridge
+
+services:
+  wordpress_db:
+    image: mysql:5.7
+    restart: always
+    container_name: wordpress_db
+    networks:
+      - wordpress_network
+    env_file:
+      - .env
+    ports:
+      - 3306:3306
+    volumes:
+      - ./db:/var/lib/mysql
+
+  wordpress_web:
+    image: wordpress:latest
+    container_name: wordpress_web
+    ports:
+      - 8080:80
+    restart: always
+    volumes:
+      - ./.htaccess:/var/www/html/.htaccess
+      - ./web:/var/www/html
+    networks:
+      - wordpress_network
+    env_file:
+      - .env
+  wordpress_nginx:
+    image: nginx:latest
+    container_name: wordpress_nginx
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx.crt:/etc/nginx/nginx.crt
+      - ./nginx.key:/etc/nginx/nginx.key
+    networks:
+      - wordpress_network

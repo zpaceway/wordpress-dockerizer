@@ -1,0 +1,5 @@
+/db
+/web
+/.env
+/nginx.crt
+/nginx.key
