@@ -32,6 +32,7 @@ services:
       - wordpress_network
     env_file:
       - .env
+
   wordpress_nginx:
     image: nginx:latest
     container_name: wordpress_nginx
